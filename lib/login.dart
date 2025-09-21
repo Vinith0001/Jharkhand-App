@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
 import 'dart:math' as math;
+import 'home.dart';
 
 class AuthPage extends StatefulWidget {
   const AuthPage({super.key});
@@ -154,14 +155,21 @@ class _AuthPageState extends State<AuthPage> with TickerProviderStateMixin {
       isLoading = false;
     });
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(isLogin ? 'Login successful!' : 'Account created successfully!'),
-        backgroundColor: secondaryColor,
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-      ),
-    );
+    if (isLogin) {
+      // Navigate to home page after successful login
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => TravelDashboard()),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Account created successfully!'),
+          backgroundColor: secondaryColor,
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        ),
+      );
+    }
   }
 
   @override
