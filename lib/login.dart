@@ -191,24 +191,15 @@ class _AuthPageState extends State<AuthPage> with TickerProviderStateMixin {
                   constraints: BoxConstraints(
                     minHeight: MediaQuery.of(context).size.height - MediaQuery.of(context).padding.top,
                   ),
-                  child: IntrinsicHeight(
-                    child: Column(
-                      children: [
-                        Container(
-                          height: MediaQuery.of(context).size.height * 0.25,
-                          child: _build3DHeader(),
-                        ),
-                        Expanded(
-                          child: Center(
-                            child: _build3DFormCard(),
-                          ),
-                        ),
-                        Container(
-                          height: 80,
-                          child: _buildEnhancedFooter(),
-                        ),
-                      ],
-                    ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _build3DHeader(),
+                      const SizedBox(height: 30),
+                      _build3DFormCard(),
+                      const SizedBox(height: 20),
+                      _buildEnhancedFooter(),
+                    ],
                   ),
                 ),
               ),
