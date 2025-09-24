@@ -455,41 +455,47 @@ class _ExploreDestinationsScreenState extends State<ExploreDestinationsScreen>
 
   Widget _buildDestinationCard(Destination destination) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 20),
+      margin: const EdgeInsets.only(bottom: 24),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(25),
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Colors.white.withOpacity(0.15),
+            Colors.white.withOpacity(0.2),
             Colors.white.withOpacity(0.05),
           ],
         ),
         border: Border.all(
-          color: Colors.white.withOpacity(0.3),
+          color: Colors.white.withOpacity(0.4),
           width: 1.5,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.3),
-            blurRadius: 20,
+            color: primaryColor.withOpacity(0.3),
+            blurRadius: 25,
+            offset: const Offset(0, 15),
+            spreadRadius: 2,
+          ),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.4),
+            blurRadius: 30,
             offset: const Offset(0, 10),
           ),
         ],
       ),
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(25),
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
           child: InkWell(
             onTap: () => _showDestinationDetails(destination),
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(25),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  height: 180,
+                  height: 220,
                   decoration: const BoxDecoration(
                     gradient: LinearGradient(
                       colors: [primaryColor, secondaryColor],
@@ -501,37 +507,98 @@ class _ExploreDestinationsScreenState extends State<ExploreDestinationsScreen>
                     children: [
                       if (destination.images.isNotEmpty)
                         ClipRRect(
-                          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                          borderRadius: const BorderRadius.vertical(top: Radius.circular(25)),
                           child: Image.network(
                             destination.images.first,
                             width: double.infinity,
-                            height: 180,
+                            height: 220,
                             fit: BoxFit.cover,
+                            loadingBuilder: (context, child, loadingProgress) {
+                              if (loadingProgress == null) return child;
+                              return Container(
+                                height: 220,
+                                decoration: const BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [primaryColor, secondaryColor],
+                                  ),
+                                ),
+                                child: const Center(
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                ),
+                              );
+                            },
                             errorBuilder: (context, error, stackTrace) {
-                              return const Center(
-                                child: Icon(
-                                  Icons.landscape,
-                                  size: 60,
-                                  color: Colors.white70,
+                              return Container(
+                                height: 220,
+                                decoration: const BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [primaryColor, secondaryColor],
+                                  ),
+                                ),
+                                child: const Center(
+                                  child: Icon(
+                                    Icons.landscape,
+                                    size: 80,
+                                    color: Colors.white70,
+                                  ),
                                 ),
                               );
                             },
                           ),
                         )
                       else
-                        const Center(
-                          child: Icon(
-                            Icons.landscape,
-                            size: 60,
-                            color: Colors.white70,
+                        Container(
+                          height: 220,
+                          decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [primaryColor, secondaryColor],
+                            ),
+                          ),
+                          child: const Center(
+                            child: Icon(
+                              Icons.landscape,
+                              size: 80,
+                              color: Colors.white70,
+                            ),
                           ),
                         ),
                       Container(
+                        height: 220,
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
-                            colors: [Colors.transparent, Colors.black.withOpacity(0.3)],
+                            colors: [Colors.transparent, Colors.black.withOpacity(0.5)],
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        top: 15,
+                        left: 15,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.6),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(color: Colors.white.withOpacity(0.3)),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.location_on, color: Colors.white, size: 14),
+                              const SizedBox(width: 4),
+                              Text(
+                                destination.location.split(',').first,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
@@ -542,80 +609,136 @@ class _ExploreDestinationsScreenState extends State<ExploreDestinationsScreen>
                           child: Container(
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.9),
+                              gradient: LinearGradient(
+                                colors: [Colors.purple.shade600, Colors.purple.shade400],
+                              ),
                               borderRadius: BorderRadius.circular(15),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.purple.withOpacity(0.4),
+                                  blurRadius: 8,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
                             ),
-                            child: Row(
+                            child: const Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                Icon(Icons.view_in_ar, color: primaryColor, size: 16),
-                                const SizedBox(width: 4),
-                                Text('AR', style: TextStyle(color: primaryColor, fontSize: 12, fontWeight: FontWeight.bold)),
+                                Icon(Icons.view_in_ar, color: Colors.white, size: 16),
+                                SizedBox(width: 4),
+                                Text('AR', style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
                               ],
                             ),
                           ),
                         ),
+                      Positioned(
+                        bottom: 15,
+                        right: 15,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.7),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(color: Colors.amber.withOpacity(0.5)),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(Icons.star, color: Colors.amber, size: 16),
+                              const SizedBox(width: 4),
+                              Text(
+                                '${destination.rating}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(24),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      Text(
+                        destination.name,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
                       Row(
                         children: [
-                          Expanded(
+                          Icon(Icons.reviews, color: Colors.white.withOpacity(0.7), size: 16),
+                          const SizedBox(width: 6),
+                          Text(
+                            '${destination.reviewCount} reviews',
+                            style: TextStyle(
+                              color: Colors.white.withOpacity(0.7),
+                              fontSize: 13,
+                            ),
+                          ),
+                          const Spacer(),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: destination.entryFee.toLowerCase().contains('free') 
+                                  ? Colors.green.withOpacity(0.2)
+                                  : primaryColor.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: destination.entryFee.toLowerCase().contains('free')
+                                    ? Colors.green.withOpacity(0.5)
+                                    : primaryColor.withOpacity(0.5),
+                              ),
+                            ),
                             child: Text(
-                              destination.name,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                              destination.entryFee,
+                              style: TextStyle(
+                                color: destination.entryFee.toLowerCase().contains('free')
+                                    ? Colors.green.shade300
+                                    : Colors.white,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           ),
-                          Row(
-                            children: [
-                              const Icon(Icons.star, color: Colors.amber, size: 20),
-                              const SizedBox(width: 4),
-                              Text(
-                                '${destination.rating}',
-                                style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
-                              ),
-                              Text(
-                                ' (${destination.reviewCount})',
-                                style: const TextStyle(color: Colors.white70, fontSize: 12),
-                              ),
-                            ],
-                          ),
                         ],
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 12),
                       Text(
                         destination.description,
                         style: const TextStyle(
                           color: Colors.white70,
                           fontSize: 14,
-                          height: 1.4,
+                          height: 1.5,
                         ),
-                        maxLines: 2,
+                        maxLines: 3,
                         overflow: TextOverflow.ellipsis,
                       ),
-                      const SizedBox(height: 15),
+                      const SizedBox(height: 16),
                       Wrap(
                         spacing: 8,
-                        runSpacing: 6,
-                        children: destination.categories.map((category) {
+                        runSpacing: 8,
+                        children: destination.categories.take(2).map((category) {
                           return Container(
                             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
-                                colors: [primaryColor.withOpacity(0.3), secondaryColor.withOpacity(0.3)],
+                                colors: [primaryColor.withOpacity(0.4), secondaryColor.withOpacity(0.4)],
                               ),
-                              borderRadius: BorderRadius.circular(15),
+                              borderRadius: BorderRadius.circular(18),
                               border: Border.all(
-                                color: Colors.white.withOpacity(0.3),
+                                color: Colors.white.withOpacity(0.4),
                                 width: 1,
                               ),
                             ),
@@ -624,7 +747,7 @@ class _ExploreDestinationsScreenState extends State<ExploreDestinationsScreen>
                               style: const TextStyle(
                                 fontSize: 12,
                                 color: Colors.white,
-                                fontWeight: FontWeight.w500,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           );
@@ -711,22 +834,46 @@ class _DestinationDetailScreenState extends State<DestinationDetailScreen> with 
                 background: Stack(
                   fit: StackFit.expand,
                   children: [
-                    Container(
-                      decoration: const BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [primaryColor, secondaryColor],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
+                    if (widget.destination.images.isNotEmpty)
+                      Image.network(
+                        widget.destination.images.first,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            decoration: const BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [primaryColor, secondaryColor],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                            ),
+                            child: const Center(
+                              child: Icon(
+                                Icons.landscape,
+                                size: 80,
+                                color: Colors.white70,
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    else
+                      Container(
+                        decoration: const BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [primaryColor, secondaryColor],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                        ),
+                        child: const Center(
+                          child: Icon(
+                            Icons.landscape,
+                            size: 80,
+                            color: Colors.white70,
+                          ),
                         ),
                       ),
-                      child: const Center(
-                        child: Icon(
-                          Icons.landscape,
-                          size: 80,
-                          color: Colors.white70,
-                        ),
-                      ),
-                    ),
                     Container(
                       decoration: const BoxDecoration(
                         gradient: LinearGradient(

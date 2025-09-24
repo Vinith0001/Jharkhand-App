@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'dart:ui';
 import 'dart:math' as math;
 import 'destinations.dart';
+import 'language.dart';
 
 class TravelDashboard extends StatefulWidget {
   const TravelDashboard({super.key});
@@ -999,7 +1000,14 @@ class _TravelDashboardState extends State<TravelDashboard> with TickerProviderSt
                   ),
                   SizedBox(width: 10),
                   Expanded(
-                    child: _buildLanguageButton('🏛️ Tribal', () => _showSnackBar('Local tribal language support!')),
+                    child: _buildLanguageButton('🏛️ Tribal', () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const LanguageTranslatorScreen(),
+                        ),
+                      );
+                    }),
                   ),
                 ],
               ),
