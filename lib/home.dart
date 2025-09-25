@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'destination.dart';
+import 'travel_page.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -63,8 +64,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             children: [
               _buildHeader(),
               _buildSearchBar(),
-              _buildStatsCards(),
               _buildDestinations(),
+              _buildTravelAnywhere(),
+              _buildNearbyFoods(),
+              _buildNearbyHotels(),
               _buildCategories(),
             ],
           ),
@@ -118,7 +121,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     return GestureDetector(
       onTap: () => print('Search tapped'),
       child: Container(
-        margin: const EdgeInsets.all(20),
+        margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -139,67 +142,23 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildStatsCards() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Row(
-        children: [
-          Expanded(child: _buildStatCard('25+', 'Places', Icons.place_outlined)),
-          const SizedBox(width: 12),
-          Expanded(child: _buildStatCard('4.8', 'Rating', Icons.star_outline)),
-          const SizedBox(width: 12),
-          Expanded(child: _buildStatCard('1M+', 'Visitors', Icons.people_outline)),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStatCard(String value, String label, IconData icon) {
-    return GestureDetector(
-      onTap: () => print('$label stat tapped'),
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey[100]!),
-        ),
-        child: Column(
-          children: [
-            Icon(icon, color: Colors.blue, size: 24),
-            const SizedBox(height: 8),
-            Text(
-              value,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-            ),
-            Text(label, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
-          ],
-        ),
-      ),
-    );
-  }
-
-
-
   Widget _buildDestinations() {
     final allDestinations = [
       {'name': 'Netarhat Hills', 'location': 'Latehar', 'image': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400'},
       {'name': 'Hundru Falls', 'location': 'Ranchi', 'image': 'https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=400'},
-      {'name': 'Betla Park', 'location': 'Latehar', 'image': 'https://images.unsplash.com/photo-1549366021-9f761d040a94?w=400'},
+      {'name': 'Betla Park', 'location': 'Latehar', 'image': 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400'},
       {'name': 'Dassam Falls', 'location': 'Ranchi', 'image': 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400'},
       {'name': 'Jonha Falls', 'location': 'Ranchi', 'image': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400'},
       {'name': 'Tagore Hill', 'location': 'Ranchi', 'image': 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400'},
       {'name': 'Deoghar Temple', 'location': 'Deoghar', 'image': 'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=400'},
       {'name': 'Parasnath Hill', 'location': 'Giridih', 'image': 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400'},
     ];
-    
-    final destinations = _showAllDestinations ? allDestinations : allDestinations.take(3).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.fromLTRB(20, 24, 20, 16),
+          padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -208,14 +167,10 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
               ),
               GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _showAllDestinations = !_showAllDestinations;
-                  });
-                },
-                child: Text(
-                  _showAllDestinations ? 'Show less' : 'See all',
-                  style: const TextStyle(
+                onTap: () => print('See all tapped'),
+                child: const Text(
+                  'See all',
+                  style: TextStyle(
                     color: Colors.blue,
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
@@ -225,253 +180,367 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             ],
           ),
         ),
-        _showAllDestinations
-            ? Padding(
+        SizedBox(
+          height: 200,
+          child: PageView.builder(
+            controller: _pageController,
+            itemCount: null,
+            itemBuilder: (context, index) {
+              final realIndex = index % allDestinations.length;
+              final destination = allDestinations[realIndex];
+              return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                    childAspectRatio: 0.8,
-                  ),
-                  itemCount: allDestinations.length,
-                  itemBuilder: (context, index) {
-                    final destination = allDestinations[index];
-                    return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => DestinationDetailScreen(
-                              name: destination['name'] as String,
-                              location: destination['location'] as String,
-                              image: destination['image'] as String,
-                              rating: '4.${(8 - index).clamp(1, 9)}',
-                            ),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.grey[100]!),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              flex: 3,
-                              child: Stack(
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                                    child: Image.network(
-                                      destination['image'] as String,
-                                      width: double.infinity,
-                                      height: double.infinity,
-                                      fit: BoxFit.cover,
-                                      errorBuilder: (context, error, stackTrace) {
-                                        return Container(
-                                          color: Colors.grey[200],
-                                          child: Center(
-                                            child: Icon(Icons.landscape, size: 40, color: Colors.grey[400]),
-                                          ),
-                                        );
-                                      },
-                                    ),
-                                  ),
-                                  Positioned(
-                                    top: 8,
-                                    right: 8,
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      child: Row(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          const Icon(Icons.star, color: Colors.orange, size: 12),
-                                          const SizedBox(width: 2),
-                                          Text(
-                                            '4.${(8 - index).clamp(1, 9)}',
-                                            style: const TextStyle(
-                                              color: Colors.black87,
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              flex: 2,
-                              child: Padding(
-                                padding: const EdgeInsets.all(12),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      destination['name'] as String,
-                                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Row(
-                                      children: [
-                                        Icon(Icons.location_on_outlined, color: Colors.grey[500], size: 12),
-                                        const SizedBox(width: 2),
-                                        Expanded(
-                                          child: Text(
-                                            destination['location'] as String,
-                                            style: TextStyle(color: Colors.grey[600], fontSize: 12),
-                                            maxLines: 1,
-                                            overflow: TextOverflow.ellipsis,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DestinationDetailScreen(
+                          name: destination['name'] as String,
+                          location: destination['location'] as String,
+                          image: destination['image'] as String,
+                          rating: '4.${(8 - realIndex).clamp(1, 9)}',
                         ),
                       ),
                     );
                   },
-                ),
-              )
-            : SizedBox(
-                height: 200,
-                child: PageView.builder(
-                  controller: _pageController,
-                  itemCount: null,
-                  itemBuilder: (context, index) {
-                    final realIndex = index % allDestinations.length;
-                    final destination = allDestinations[realIndex];
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DestinationDetailScreen(
-                                name: destination['name'] as String,
-                                location: destination['location'] as String,
-                                image: destination['image'] as String,
-                                rating: '4.${(8 - realIndex).clamp(1, 9)}',
-                              ),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 4),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(color: Colors.grey[100]!),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                height: 120,
-                                decoration: const BoxDecoration(
-                                  borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-                                ),
-                                child: Stack(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                                      child: Image.network(
-                                        destination['image'] as String,
-                                        width: double.infinity,
-                                        height: 120,
-                                        fit: BoxFit.cover,
-                                        errorBuilder: (context, error, stackTrace) {
-                                          return Container(
-                                            height: 120,
-                                            color: Colors.grey[200],
-                                            child: Center(
-                                              child: Icon(Icons.landscape, size: 40, color: Colors.grey[400]),
-                                            ),
-                                          );
-                                        },
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.grey[100]!),
+                    ),
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: ClipRRect(
+                            borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                            child: Stack(
+                              children: [
+                                Image.network(
+                                  destination['image'] as String,
+                                  width: double.infinity,
+                                  height: double.infinity,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Container(
+                                      color: Colors.grey[200],
+                                      child: Center(
+                                        child: Icon(Icons.landscape, size: 40, color: Colors.grey[400]),
                                       ),
-                                    ),
-                                    Positioned(
-                                      top: 8,
-                                      right: 8,
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius: BorderRadius.circular(8),
-                                        ),
-                                        child: Row(
-                                          mainAxisSize: MainAxisSize.min,
-                                          children: [
-                                            const Icon(Icons.star, color: Colors.orange, size: 12),
-                                            const SizedBox(width: 2),
-                                            Text(
-                                              '4.${(8 - realIndex).clamp(1, 9)}',
-                                              style: const TextStyle(
-                                                color: Colors.black87,
-                                                fontSize: 11,
-                                                fontWeight: FontWeight.w500,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                    );
+                                  },
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(12),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      destination['name'] as String,
-                                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                                Positioned(
+                                  top: 8,
+                                  left: 8,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: Colors.black.withOpacity(0.6),
+                                      borderRadius: BorderRadius.circular(4),
                                     ),
-                                    const SizedBox(height: 4),
-                                    Row(
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Icon(Icons.location_on_outlined, color: Colors.grey[500], size: 14),
+                                        Icon(Icons.visibility, size: 12, color: Colors.white),
                                         const SizedBox(width: 4),
                                         Text(
-                                          destination['location'] as String,
-                                          style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                                          'Preview',
+                                          style: TextStyle(fontSize: 10, color: Colors.white),
                                         ),
                                       ],
                                     ),
-                                  ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.all(12),
+                          child: Text(
+                            destination['name'] as String,
+                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTravelAnywhere() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.fromLTRB(20, 24, 20, 16),
+          child: Text(
+            'Travel Anywhere',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const TravelPage()),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Colors.blue,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.directions, color: Colors.white, size: 24),
+                  const SizedBox(width: 12),
+                  Text(
+                    'Plan Your Journey',
+                    style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
+                  Spacer(),
+                  Icon(Icons.arrow_forward, color: Colors.white),
+                ],
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 24),
+      ],
+    );
+  }
+
+  Widget _buildNearbyFoods() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.fromLTRB(20, 8, 20, 16),
+          child: Text(
+            'Popular Crafts & Foods',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 200,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            itemCount: 3,
+            itemBuilder: (context, index) {
+              return Container(
+                width: 140,
+                margin: const EdgeInsets.symmetric(horizontal: 4),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.grey[200]!),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 100,
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(12),
+                        ),
+                      ),
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(12),
+                        ),
+                        child: Image.network(
+                          index == 0 ? 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400' :
+                          index == 1 ? 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400' :
+                          'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400',
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              color: Colors.grey[200],
+                              child: Center(
+                                child: Icon(
+                                  index == 0 ? Icons.palette : 
+                                  index == 1 ? Icons.handyman : Icons.restaurant,
+                                  size: 40,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            index == 0 ? 'Folk Arts' : index == 1 ? 'Local Food' : 'Handicrafts',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.star,
+                                color: Colors.orange,
+                                size: 16,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                '(9.8)',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.grey[600],
                                 ),
                               ),
                             ],
                           ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildNearbyHotels() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.fromLTRB(20, 24, 20, 16),
+          child: Text(
+            'Hotels',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+        ),
+        SizedBox(
+          height: 200,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            itemCount: 3,
+            itemBuilder: (context, index) {
+              return Container(
+                width: 140,
+                margin: const EdgeInsets.symmetric(horizontal: 4),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: Colors.grey[200]!),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      height: 100,
+                      decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(12),
                         ),
                       ),
-                    );
-                  },
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.vertical(
+                          top: Radius.circular(12),
+                        ),
+                        child: Image.network(
+                          index == 0 ? 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400' :
+                          index == 1 ? 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=400' :
+                          'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400',
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Container(
+                              color: Colors.grey[200],
+                              child: Center(
+                                child: Icon(
+                                  index == 0 ? Icons.pool : 
+                                  index == 1 ? Icons.deck : Icons.local_pizza,
+                                  size: 40,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            index == 0 ? 'Luxury Hotel' : index == 1 ? 'Resort' : 'Budget Hotel',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.black87,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.star,
+                                color: Colors.orange,
+                                size: 16,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                '(9.8)',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ),
+              );
+            },
+          ),
+        ),
       ],
     );
   }

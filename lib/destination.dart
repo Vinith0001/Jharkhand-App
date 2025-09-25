@@ -285,7 +285,7 @@ class DestinationDetailScreen extends StatelessWidget {
         const Padding(
           padding: EdgeInsets.fromLTRB(20, 8, 20, 16),
           child: Text(
-            'Popular Crafts & Foods',
+            'Nearby Foods',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
@@ -401,7 +401,7 @@ class DestinationDetailScreen extends StatelessWidget {
         const Padding(
           padding: EdgeInsets.fromLTRB(20, 24, 20, 16),
           child: Text(
-            'Hotels',
+            'Nearby Hotels',
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
