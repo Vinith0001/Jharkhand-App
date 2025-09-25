@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'food_detail.dart';
+import 'hotel_detail.dart';
 
 class DestinationDetailScreen extends StatelessWidget {
   final String name;
@@ -29,6 +31,7 @@ class DestinationDetailScreen extends StatelessWidget {
                 _buildWeatherCard(),
                 _buildCraftsAndFoodsSection(),
                 _buildHotelsSection(),
+                _buildCommentsSection(),
                 const SizedBox(height: 24),
               ],
             ),
@@ -56,13 +59,31 @@ class DestinationDetailScreen extends StatelessWidget {
         onPressed: () => Navigator.pop(context),
       ),
       actions: [
-        Container(
-          margin: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.9),
-            borderRadius: BorderRadius.circular(8),
+        GestureDetector(
+          onTap: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('AR View coming soon!')),
+            );
+          },
+          child: Container(
+            margin: const EdgeInsets.all(8),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: Colors.blue.withOpacity(0.9),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.view_in_ar, color: Colors.white, size: 16),
+                const SizedBox(width: 4),
+                Text(
+                  'View in AR',
+                  style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
+                ),
+              ],
+            ),
           ),
-          child: const Icon(Icons.favorite, color: Colors.red),
         ),
       ],
       flexibleSpace: FlexibleSpaceBar(
@@ -240,20 +261,19 @@ class DestinationDetailScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Best time to visit: 06:00 - 18:00',
+                'Best time to visit',
                 style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
                   color: Colors.grey[800],
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 4),
               Text(
-                'Weather : 23°C',
+                '06:00 - 18:00',
                 style: TextStyle(
                   fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey[800],
+                  color: Colors.grey[600],
                 ),
               ),
             ],
@@ -268,7 +288,7 @@ class DestinationDetailScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(30),
             ),
             child: const Icon(
-              Icons.wb_sunny,
+              Icons.access_time,
               color: Colors.white,
               size: 30,
             ),
@@ -306,7 +326,23 @@ class DestinationDetailScreen extends StatelessWidget {
                 Colors.red.withOpacity(0.3),
               ];
               
-              return Container(
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FoodDetailScreen(
+                        name: index == 0 ? 'Folk Arts' : index == 1 ? 'Local Food' : 'Handicrafts',
+                        location: 'Nearby Restaurant',
+                        image: index == 0 ? 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400' :
+                               index == 1 ? 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400' :
+                               'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400',
+                        rating: '4.8',
+                      ),
+                    ),
+                  );
+                },
+                child: Container(
                 width: 140,
                 margin: const EdgeInsets.symmetric(horizontal: 4),
                 decoration: BoxDecoration(
@@ -386,6 +422,7 @@ class DestinationDetailScreen extends StatelessWidget {
                     ),
                   ],
                 ),
+                ),
               );
             },
           ),
@@ -422,88 +459,209 @@ class DestinationDetailScreen extends StatelessWidget {
                 Colors.orange.withOpacity(0.3),
               ];
               
-              return Container(
-                width: 140,
-                margin: const EdgeInsets.symmetric(horizontal: 4),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.grey[200]!),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: 100,
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(12),
-                        ),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: const BorderRadius.vertical(
-                          top: Radius.circular(12),
-                        ),
-                        child: Image.network(
-                          index == 0 ? 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400' :
-                          index == 1 ? 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=400' :
-                          'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400',
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              color: colors[index],
-                              child: Center(
-                                child: Icon(
-                                  index == 0 ? Icons.pool : 
-                                  index == 1 ? Icons.deck : Icons.local_pizza,
-                                  size: 40,
-                                  color: Colors.grey[600],
-                                ),
-                              ),
-                            );
-                          },
-                        ),
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HotelDetailScreen(
+                        name: index == 0 ? 'Luxury Hotel' : index == 1 ? 'Resort' : 'Budget Hotel',
+                        location: 'Nearby Hotel',
+                        image: index == 0 ? 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400' :
+                               index == 1 ? 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=400' :
+                               'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400',
+                        rating: '4.9',
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.all(12),
+                  );
+                },
+                child: Container(
+                  width: 140,
+                  margin: const EdgeInsets.symmetric(horizontal: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Colors.grey[200]!),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        height: 100,
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(12),
+                          ),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(12),
+                          ),
+                          child: Image.network(
+                            index == 0 ? 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400' :
+                            index == 1 ? 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=400' :
+                            'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400',
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                color: colors[index],
+                                child: Center(
+                                  child: Icon(
+                                    index == 0 ? Icons.pool : 
+                                    index == 1 ? Icons.deck : Icons.local_pizza,
+                                    size: 40,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              index == 0 ? 'Luxury Hotel' : index == 1 ? 'Resort' : 'Budget Hotel',
+                              style: const TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.black87,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.star,
+                                  color: Colors.orange,
+                                  size: 16,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  '(9.8)',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCommentsSection() {
+    final comments = [
+      {'name': 'Rahul Kumar', 'comment': 'Amazing place! The views are breathtaking.', 'time': '2 days ago'},
+      {'name': 'Priya Singh', 'comment': 'Perfect for family trip. Loved the experience.', 'time': '1 week ago'},
+      {'name': 'Amit Sharma', 'comment': 'Great destination, highly recommended!', 'time': '2 weeks ago'},
+    ];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.fromLTRB(20, 24, 20, 16),
+          child: Text(
+            'Comments',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+        ),
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 20),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.grey[200]!),
+          ),
+          child: Column(
+            children: [
+              ...comments.map((comment) => Container(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CircleAvatar(
+                      radius: 16,
+                      backgroundColor: Colors.blue[100],
+                      child: Text(
+                        comment['name']![0],
+                        style: TextStyle(color: Colors.blue[800], fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            index == 0 ? 'Luxury Hotel' : index == 1 ? 'Resort' : 'Budget Hotel',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: Colors.black87,
-                            ),
-                          ),
-                          const SizedBox(height: 8),
                           Row(
                             children: [
-                              const Icon(
-                                Icons.star,
-                                color: Colors.orange,
-                                size: 16,
-                              ),
-                              const SizedBox(width: 4),
                               Text(
-                                '(9.8)',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.grey[600],
-                                ),
+                                comment['name']!,
+                                style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                comment['time']!,
+                                style: TextStyle(color: Colors.grey[600], fontSize: 12),
                               ),
                             ],
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            comment['comment']!,
+                            style: TextStyle(color: Colors.grey[700], fontSize: 14),
                           ),
                         ],
                       ),
                     ),
                   ],
                 ),
-              );
-            },
+              )).toList(),
+              const Divider(),
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 16,
+                    backgroundColor: Colors.grey[300],
+                    child: Icon(Icons.person, color: Colors.grey[600], size: 20),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: TextField(
+                      decoration: InputDecoration(
+                        hintText: 'Add a comment...',
+                        border: InputBorder.none,
+                        hintStyle: TextStyle(color: Colors.grey[500]),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(Icons.send, color: Colors.blue),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ],

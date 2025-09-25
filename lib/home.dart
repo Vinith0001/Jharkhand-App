@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'destination.dart';
 import 'travel_page.dart';
+import 'food_detail.dart';
+import 'hotel_detail.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -121,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     return GestureDetector(
       onTap: () => print('Search tapped'),
       child: Container(
-        margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+        margin: const EdgeInsets.fromLTRB(20, 0, 20, 0),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -347,7 +349,23 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             itemCount: 3,
             itemBuilder: (context, index) {
-              return Container(
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FoodDetailScreen(
+                        name: index == 0 ? 'Folk Arts' : index == 1 ? 'Local Food' : 'Handicrafts',
+                        location: 'Ranchi',
+                        image: index == 0 ? 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400' :
+                        index == 1 ? 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400' :
+                        'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400',
+                        rating: '4.8',
+                      ),
+                    ),
+                  );
+                },
+                child: Container(
                 width: 140,
                 margin: const EdgeInsets.symmetric(horizontal: 4),
                 decoration: BoxDecoration(
@@ -427,6 +445,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     ),
                   ],
                 ),
+                ),
               );
             },
           ),
@@ -457,7 +476,23 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             itemCount: 3,
             itemBuilder: (context, index) {
-              return Container(
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => HotelDetailScreen(
+                        name: index == 0 ? 'Luxury Hotel' : index == 1 ? 'Resort' : 'Budget Hotel',
+                        location: 'Ranchi',
+                        image: index == 0 ? 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=400' :
+                        index == 1 ? 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=400' :
+                        'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400',
+                        rating: '4.5',
+                      ),
+                    ),
+                  );
+                },
+                child: Container(
                 width: 140,
                 margin: const EdgeInsets.symmetric(horizontal: 4),
                 decoration: BoxDecoration(
@@ -536,6 +571,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                       ),
                     ),
                   ],
+                ),
                 ),
               );
             },
